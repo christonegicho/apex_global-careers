@@ -11,7 +11,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="oppor.css">
-   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -32,54 +32,28 @@
   </nav>
 </header>
 
-<!-- Training Section -->
-<section class="resources-section">
-    <h2>🎯 Training & Courses</h2>
-    <div class="resources-grid">
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?online-learning" alt="Training">
-            <h3>Digital Skills for Remote Work</h3>
-            <p>Learn essential tools like Zoom, Slack, and Google Workspace to excel in remote jobs.</p>
-            <a href="#">Start Learning →</a>
-        </div>
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?career" alt="Guidance">
-            <h3>Career Path Guidance</h3>
-            <p>Identify your strengths and explore global career options tailored to your skills.</p>
-            <a href="#">Take the Quiz →</a>
-        </div>
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?computer" alt="IT Training">
-            <h3>Intro to Coding</h3>
-            <p>Free beginner-friendly lessons in HTML, CSS, and JavaScript for career changers.</p>
-            <a href="#">Join Now →</a>
-        </div>
-    </div>
-</section>
+
 
 <!-- CV & Interview Section -->
 <section class="resources-section">
     <h2>📄 CV Building & Interview Prep</h2>
-    <div class="resources-grid">
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?resume" alt="CV">
-            <h3>AI CV Builder</h3>
-            <p>Create a professional, ATS-friendly CV in minutes and tailor it to job postings.</p>
-            <a href="#">Build My CV →</a>
-        </div>
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?interview" alt="Interview">
-            <h3>Mock Interview Practice</h3>
-            <p>Practice common interview questions with our AI-powered virtual interviewer.</p>
-            <a href="#">Start Practicing →</a>
-        </div>
-        <div class="resource-card">
-            <img src="https://source.unsplash.com/400x250/?presentation" alt="Webinar">
-            <h3>Webinar: Mastering Job Interviews</h3>
-            <p>Join live sessions with recruiters on how to stand out in international interviews.</p>
-            <a href="#">Register →</a>
-        </div>
+
+    <!-- Resume Generator Form -->
+    <div class="resume-form">
+        <h2>Create Your Resume</h2>
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="phone" placeholder="Phone Number">
+        <textarea id="summary" placeholder="Professional Summary"></textarea>
+        <input type="text" id="education" placeholder="Education">
+        <input type="text" id="experience" placeholder="Work Experience">
+        <input type="text" id="skills" placeholder="Key Skills (comma separated)">
+        <button class="btn" onclick="generateResume()">Generate Resume</button>
+        <button class="btn" id="downloadBtn" style="display:none;" onclick="downloadResume()">Download as PDF</button>
     </div>
+
+    <!-- Resume Preview -->
+    <div class="resume-preview" id="resumePreview"></div>
 </section>
 
 <!-- Extra Resources -->
@@ -107,6 +81,46 @@
     </div>
 </section>
 
-<script src="script.js"></script>
+<!-- jsPDF Library for PDF Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Resume Generator JS -->
+<script>
+function generateResume() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+  const summary = document.getElementById("summary").value;
+  const education = document.getElementById("education").value;
+  const experience = document.getElementById("experience").value;
+  const skills = document.getElementById("skills").value.split(",");
+
+  const resumeHTML = `
+    <h2>${name}</h2>
+    <p><strong>Email:</strong> ${email} | <strong>Phone:</strong> ${phone}</p>
+    <h3>Summary</h3>
+    <p>${summary}</p>
+    <h3>Education</h3>
+    <p>${education}</p>
+    <h3>Experience</h3>
+    <p>${experience}</p>
+    <h3>Skills</h3>
+    <ul>${skills.map(skill => `<li>${skill.trim()}</li>`).join("")}</ul>
+  `;
+
+  document.getElementById("resumePreview").innerHTML = resumeHTML;
+  document.getElementById("downloadBtn").style.display = "inline-block";
+}
+
+function downloadResume() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const resumeContent = document.getElementById("resumePreview").innerText;
+
+  doc.text(resumeContent, 10, 10);
+  doc.save("resume.pdf");
+}
+</script>
+
 </body>
 </html>
